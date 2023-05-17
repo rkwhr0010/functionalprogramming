@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+</head>
+<body>
+<script>
+//version1
+var _ = function(){
+    return {
+        filter:filter,
+        map:map,
+    };
+    function filter(list, predi){
+        const result = [];
+        for(arg of list){
+            if(predi(arg)) result.push(arg);
+        }
+        return result;
+    }
+    function map(list, mapper){
+        const result = [];
+        for(arg of list) result.push(mapper(arg));
+        return result;
+    }
+    function each(list, iter){
+        for(let i=0;i<list.length;i++){
+            iter(list[i]);
+        }
+        return list;
+    }
+}();
+
+
+</script>
+</body>
+</html>
