@@ -59,6 +59,7 @@ var _ = function(){
         get: curryr(get), 
         reduce:reduce,
         rest:rest,
+        pipe:pipe,
         curry:curry,
         curryr:curryr,
     };
@@ -148,6 +149,12 @@ console.clear();
 console.log( 
     _.reduce(_.map(users,u=>_.get(u,'age')),(a,b)=>a+b)
 );
+console.clear();
+
+console.log(
+    _.pipe(_.filter(u=>u.age>=30)
+        ,_.map(u=>u.name))(users)
+)
 
 </script>
 </body>
