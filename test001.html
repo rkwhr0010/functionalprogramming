@@ -53,8 +53,8 @@ console.clear();
 //version2, each 통합, curry
 var _ = function(){
     return {
-        filter:filter,
-        map:map,
+        filter:curryr(filter),
+        map:curryr(map),
         each:each,
         curry:curry,
         curryr:curryr,
@@ -78,7 +78,7 @@ var _ = function(){
         return list;
     }
     function curry(fn){
-        return function(a){
+        return function(a,b){
             if(arguments.length===2)return fn(a,b); 
             return function(b){
                 return fn(a,b);
@@ -86,10 +86,10 @@ var _ = function(){
         }
     }
     function curryr(fn){
-        return function(a){
+        return function(a,b){
             if(arguments.length===2)return fn(a,b); 
             return function(b){
-                return fn(b,b);
+                return fn(b,a);
             }
         }
     }
@@ -99,6 +99,7 @@ console.log(
     _.filter(users, u=>u.age>25),
     _.map(users, u=>u.age)
 )
+
 
 
 </script>
