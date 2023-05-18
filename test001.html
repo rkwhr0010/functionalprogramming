@@ -99,7 +99,11 @@ console.log(
     _.filter(users, u=>u.age>25),
     _.map(users, u=>u.age)
 )
-
+var addMaker = (a,b) => a+b;
+addMaker = _.curryr(addMaker);
+var add100 = addMaker(100);
+console.log(add100(200));
+// console.clear();
 
 
 </script>
