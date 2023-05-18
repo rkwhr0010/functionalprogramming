@@ -60,6 +60,7 @@ var _ = function(){
         reduce:reduce,
         rest:rest,
         pipe:pipe,
+        go:go,
         curry:curry,
         curryr:curryr,
     };
@@ -112,6 +113,10 @@ var _ = function(){
             } ,arg);
         }
     }
+    function go(arg){
+        const fns = rest(arguments);
+        return pipe.apply(null,fns)(arg)
+    }
     /*함수를 인자로 받아 함수를 리턴*/
     function curry(fn){
         return function(a,b){
@@ -155,6 +160,12 @@ console.log(
     _.pipe(_.filter(u=>u.age>=30)
         ,_.map(u=>u.name))(users)
 )
+_.go(users,
+    _.filter(u=>u.age<=30),
+    _.map(u=>_.get(u,'name')),
+    console.log
+)
+
 
 </script>
 </body>
