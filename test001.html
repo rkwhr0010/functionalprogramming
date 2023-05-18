@@ -58,6 +58,7 @@ var _ = function(){
         each:each,
         get: curryr(get), 
         reduce:reduce,
+        slice:slice,
         curry:curry,
         curryr:curryr,
     };
@@ -86,11 +87,15 @@ var _ = function(){
     function get(obj, key){
         return obj[key] == null ? undefined : obj[key];
     }
+    /*유사 배열까지 처리할 수 있다. 리턴 값이 배열이되기 때문이다.*/
+    function slice(list, num){
+        return Array.prototype.slice.call(list,num||1);
+    }
     /*입력을 단 하나의 점으로 축약, 축약 결과가 값일 수도, 객체일수도 있다.*/
     function reduce(list,fn,memo){
         if(arguments.length===2) {
             memo = list[0];
-            list = Array.prototype.slice.call(list,1);
+            list = slice(list);
         }
         each(list,arg=>{
             memo = fn(memo,arg);
