@@ -50,11 +50,14 @@ console.log(
     _.map(users, u=>u.age)
 )
 console.clear();
-//version2, each 통합
+//version2, each 통합, curry
 var _ = function(){
     return {
         filter:filter,
         map:map,
+        each:each,
+        curry:curry,
+        curryr:curryr,
     };
     function filter(list, predi){
         const result = [];
@@ -74,12 +77,29 @@ var _ = function(){
         }
         return list;
     }
+    function curry(fn){
+        return function(a){
+            if(arguments.length===2)return fn(a,b); 
+            return function(b){
+                return fn(a,b);
+            }
+        }
+    }
+    function curryr(fn){
+        return function(a){
+            if(arguments.length===2)return fn(a,b); 
+            return function(b){
+                return fn(b,b);
+            }
+        }
+    }
 }();
 
 console.log(
     _.filter(users, u=>u.age>25),
     _.map(users, u=>u.age)
 )
+
 
 </script>
 </body>
