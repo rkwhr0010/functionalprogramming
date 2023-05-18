@@ -57,9 +57,11 @@ var _ = function(){
         map:curryr(map),
         each:each,
         get: curryr(get), 
+        reduce:reduce,
         curry:curry,
         curryr:curryr,
     };
+    /*입력길이 보다 같거나 작은 결과를 리턴*/
     function filter(list, predi){
         const result = [];
         each(list,arg=>{
@@ -67,20 +69,35 @@ var _ = function(){
         })
         return result;
     }
+    /*입력과 똑같은 길이 결과를 리턴*/
     function map(list, mapper){
         const result = [];
         each(list,arg=>result.push(mapper(arg)));
         return result;
     }
+    /*입력 받은 길이만큼 실행*/
     function each(list, iter){
         for(let i=0;i<list.length;i++){
             iter(list[i]);
         }
         return list;
     }
+    /*null safety*/
     function get(obj, key){
         return obj[key] == null ? undefined : obj[key];
     }
+    /*입력을 단 하나의 점으로 축약, 축약 결과가 값일 수도, 객체일수도 있다.*/
+    function reduce(list,fn,memo){
+        if(arguments.length===2) {
+            memo = list[0];
+            list = Array.prototype.slice.call(list,1);
+        }
+        each(list,arg=>{
+            memo = fn(memo,arg);
+        })
+        return memo;
+    }
+    /*함수를 인자로 받아 함수를 리턴*/
     function curry(fn){
         return function(a,b){
             if(arguments.length===2)return fn(a,b); 
@@ -89,6 +106,7 @@ var _ = function(){
             }
         }
     }
+    /*함수 인자를 뒤틀어 인지적으로 사용하기 편하게 함*/
     function curryr(fn){
         return function(a,b){
             if(arguments.length===2)return fn(a,b); 
@@ -112,6 +130,10 @@ var getName = _.get('name');
 console.log("Map사용",_.map(users, u=>u.name))
 console.log("Map_get 사용",_.map(users,u=> getName(u) ));
 
+console.clear();
+console.log( 
+    _.reduce(_.map(users,u=>_.get(u,'age')),(a,b)=>a+b)
+);
 
 </script>
 </body>
