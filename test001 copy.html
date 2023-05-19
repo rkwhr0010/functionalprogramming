@@ -56,6 +56,8 @@ var _ = function(){
         filter:curryr(filter),
         map:curryr(map),
         each:each,
+        keys:keys,
+        isObject:isObject,
         get: curryr(get), 
         reduce:reduce,
         rest:rest,
@@ -78,10 +80,19 @@ var _ = function(){
         each(list,arg=>result.push(mapper(arg)));
         return result;
     }
+    /*keys 돌림직한 데이터를 돌리기 위함*/
+    function keys(obj){
+        return isObject(obj) ? Object.keys(obj) : [];
+    }
+    /*해당 객체가 object냐 null safety*/
+    function isObject(obj){
+        return typeof obj === 'object' && !!obj;
+    }
     /*입력 받은 길이만큼 실행*/
     function each(list, iter){
-        for(let i=0;i<list.length;i++){
-            iter(list[i]);
+        const keyArr = keys(list);
+        for(let i=0, len = keyArr.length ;i<len;i++){
+            iter(list[keyArr[i]]);
         }
         return list;
     }
@@ -166,6 +177,10 @@ _.go(users,
     _.filter(upperAge25),
     _.map(nameMap),
     console.log);
+
+/*돌림직한 데이터인 OBJ도 이제 순회가능*/
+_.each(users[2],u=>console.log(u,users[0]))
+
 
 </script>
 </body>
