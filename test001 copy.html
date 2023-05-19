@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+</head>
+<body>
+<script>
+var users = [
+  { id: 1, name: 'ID', age: 36 },
+  { id: 2, name: 'BJ', age: 32 },
+  { id: 3, name: 'JM', age: 32 },
+  { id: 4, name: 'PJ', age: 27 },
+  { id: 5, name: 'HA', age: 25 },
+  { id: 6, name: 'JE', age: 26 },
+  { id: 7, name: 'JI', age: 31 },
+  { id: 8, name: 'MP', age: 23 }
+];
+
+//version1
+var _ = function(){
+    return {
+        filter:filter,
+        map:map,
+    };
+    function filter(list, predi){
+        const result = [];
+        for(arg of list){
+            if(predi(arg)) result.push(arg);
+        }
+        return result;
+    }
+    function map(list, mapper){
+        const result = [];
+        for(arg of list) result.push(mapper(arg));
+        return result;
+    }
+    function each(list, iter){
+        for(let i=0;i<list.length;i++){
+            iter(list[i]);
+        }
+        return list;
+    }
+}();
+
+console.log(
+    _.filter(users, u=>u.age>25),
+    _.map(users, u=>u.age)
+)
+console.clear();
+//version2, each 통합, curry
+var _ = function(){
+    return {
+        filter:curryr(filter),
+        map:curryr(map),
+        each:each,
+        keys:keys,
+        isObject:isObject,
+        get: curryr(get), 
+        reduce:reduce,
+        rest:rest,
+        pipe:pipe,
+        go:go,
+        curry:curry,
+        curryr:curryr,
+    };
+    /*입력길이 보다 같거나 작은 결과를 리턴*/
+    function filter(list, predi){
+        const result = [];
+        each(list,arg=>{
+            if(predi(arg)) result.push(arg);
+        })
+        return result;
+    }
+    /*입력과 똑같은 길이 결과를 리턴*/
+    function map(list, mapper){
+        const result = [];
+        each(list,arg=>result.push(mapper(arg)));
+        return result;
+    }
+    /*keys 돌림직한 데이터를 돌리기 위함*/
+    function keys(obj){
+        return isObject(obj) ? Object.keys(obj) : [];
+    }
+    /*해당 객체가 object냐 null safety*/
+    function isObject(obj){
+        return typeof obj === 'object' && !!obj;
+    }
+    /*입력 받은 길이만큼 실행*/
+    function each(list, iter){
+        const keyArr = keys(list);
+        for(let i=0, len = keyArr.length ;i<len;i++){
+            iter(list[keyArr[i]]);
+        }
+        return list;
+    }
+    /*null safety*/
+    function get(obj, key){
+        return obj[key] == null ? undefined : obj[key];
+    }
+    /*유사 배열까지 처리할 수 있다. 리턴 값이 배열이되기 때문이다.*/
+    function rest(list, num){
+        return Array.prototype.slice.call(list,num||1);
+    }
+    /*입력을 단 하나의 점으로 축약, 축약 결과가 값일 수도, 객체일수도 있다.*/
+    function reduce(list,fn,memo){
+        if(arguments.length===2) {
+            memo = list[0];
+            list = rest(list);
+        }
+        each(list,arg=>{
+            memo = fn(memo,arg);
+        })
+        return memo;
+    }
+    /*리듀스 특화함수 함수만을 다룬다.*/
+    function pipe(){
+        const fns = arguments;
+        return function(arg){
+            return reduce(fns,(arg,fn)=> fn(arg) ,arg);
+        }
+    }
+    /*파이프 즉시 실행 버전*/
+    function go(arg){
+        const fns = rest(arguments);
+        return pipe.apply(null,fns)(arg);
+    }
+    /*함수를 인자로 받아 함수를 리턴*/
+    function curry(fn){
+        return function(a,b){
+            if(arguments.length===2)return fn(a,b); 
+            return function(b){
+                return fn(a,b);
+            }
+        }
+    }
+    /*함수 인자를 뒤틀어 인지적으로 사용하기 편하게 함*/
+    function curryr(fn){
+        return function(a,b){
+            if(arguments.length===2)return fn(a,b); 
+            return function(b){
+                return fn(b,a);
+            }
+        }
+    }
+}();
+
+console.log(
+    _.filter(users, u=>u.age>25),
+    _.map(users, u=>u.age)
+)
+var addMaker = (a,b) => a+b;
+addMaker = _.curryr(addMaker);
+var add100 = addMaker(100);
+console.log(add100(200));
+console.clear();
+var getName = _.get('name');
+console.log("Map사용",_.map(users, u=>u.name))
+console.log("Map_get 사용",_.map(users,u=> getName(u) ));
+
+console.clear();
+console.log( 
+    _.reduce(_.map(users,u=>_.get(u,'age')),(a,b)=>a+b)
+);
+const nameMap = u=>u.name;
+const upperAge25 = u=>u.age>25;
+console.log(_.filter(users,u=>u.age<=28))
+
+_.pipe(
+    _.filter(upperAge25),
+    _.map(nameMap),
+    console.log)(users);
+
+_.go(users,
+    _.filter(upperAge25),
+    _.map(nameMap),
+    console.log);
+
+/*돌림직한 데이터인 OBJ도 이제 순회가능*/
+_.each(users[2],u=>console.log(u,users[0]))
+
+
+</script>
+</body>
+</html>
