@@ -9,54 +9,28 @@
 <body>
 <script>
 var users = [
-  { id: 1, name: 'ID', age: 36 },
-  { id: 2, name: 'BJ', age: 32 },
-  { id: 3, name: 'JM', age: 32 },
-  { id: 4, name: 'PJ', age: 27 },
-  { id: 5, name: 'HA', age: 25 },
-  { id: 6, name: 'JE', age: 26 },
-  { id: 7, name: 'JI', age: 31 },
-  { id: 8, name: 'MP', age: 23 }
+  { id: 10, name: 'ID', age: 36 },
+  { id: 20, name: 'BJ', age: 32 },
+  { id: 30, name: 'JM', age: 32 },
+  { id: 40, name: 'PJ', age: 27 },
+  { id: 50, name: 'HA', age: 25 },
+  { id: 60, name: 'JE', age: 26 },
+  { id: 70, name: 'JI', age: 31 },
+  { id: 80, name: 'MP', age: 23 }
 ];
-
-//version1
-var _ = function(){
-    return {
-        filter:filter,
-        map:map,
-    };
-    function filter(list, predi){
-        const result = [];
-        for(arg of list){
-            if(predi(arg)) result.push(arg);
-        }
-        return result;
-    }
-    function map(list, mapper){
-        const result = [];
-        for(arg of list) result.push(mapper(arg));
-        return result;
-    }
-    function each(list, iter){
-        for(let i=0;i<list.length;i++){
-            iter(list[i]);
-        }
-        return list;
-    }
-}();
-
-console.log(
-    _.filter(users, u=>u.age>25),
-    _.map(users, u=>u.age)
-)
-console.clear();
 //version2, each 통합, curry
 var _ = function(){
+    var filter = curryr(filter);
+
+
+
     return {
-        filter:curryr(filter),
+        filter:filter,
         map:curryr(map),
+        values:values,
         each:each,
         keys:keys,
+        pluck:pluck,
         isObject:isObject,
         get: curryr(get), 
         reduce:reduce,
@@ -79,6 +53,15 @@ var _ = function(){
         const result = [];
         each(list,arg=>result.push(mapper(arg)));
         return result;
+    }
+    function values(data){
+        return map(data,identity);   
+    }
+    function identity(data){
+        return data;
+    }
+    function pluck(list, val){
+        return map(list, data=>data[val]);
     }
     /*keys 돌림직한 데이터를 돌리기 위함*/
     function keys(obj){
@@ -180,6 +163,7 @@ _.go(users,
 
 /*돌림직한 데이터인 OBJ도 이제 순회가능*/
 _.each(users[2],u=>console.log(u,users[0]))
+console.log(_.pluck(users,'age'))
 
 
 </script>
