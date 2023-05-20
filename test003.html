@@ -108,15 +108,72 @@ each = function(list,iter){
 let get = function(obj,key){
     return obj === null ? undefined : obj[key];
 }
+/*컬렉션 중심 프로그래밍*/
+/*Map 특화 함수들*/
+map = function(list, mapper){
+    const newList = [];
+    each(list,arg=>newList.push(mapper(arg)));
+    return newList;
+}
+/*값만 줘*/
+let values = function(list){
+    return map(list,function(arg){
+        return arg;
+    })
+}
+/*배열에서 특정 값만 추출*/
+let pluck = function(list,key){
+    return map(list, function(data){
+        return data[key];
+    });
+}
+let identity = function(data){
+    return data;
+}
+values = function(list){
+    return map(list,identity);
+}
 
-
-
+/*필터 특화 함수들*/
+filter = function(list, predi){
+    const newList = [];
+    each(list,function(data){
+        if(predi(data)) newList.push(data);
+    });
+    return newList;
+}
+/*필터 대상을 제외한 */
+let reject = function(list,predi){
+    return filter(list,function(data){
+        return !predi(data);
+    })
+}
+/*결과를 정반대로*/
+let negate = function(fn){
+    return function(data){
+        return !fn(data);
+    }
+}
+/*리젝트 개선*/
+reject = function(list,predi){
+    return filter(list,negate(predi))
+}
+/*참일 것 같은 값만 남긴다*/
+let compact = function(list, data){
+    return filter(list, identity);
+}
+/*컴팩트 함수는 커리가 적용된 함수라면 이렇게 구현도 된다.*/
+compact = curryr(filter)(identity);
 
     return {
         each : each,
         filter : curryr(filter),
+        reject : curryr(reject),
+        compact : compact,
         map : curryr(map),
-        get : get,
+        values : values,
+        get : curryr(get),
+        pluck : curryr(pluck),
         rest : rest,
         reduce : reduce,
         curry : curry,
@@ -152,11 +209,19 @@ _.go(users,
     _.filter(ageThan30),
     _.map(userName),
     console.log,);
-
 _.each(users[0],data=>console.log(data));
-
-
-
+// console.clear();
+console.log(
+    _.values(users[0]),
+    _.values(),
+);
+console.log(
+    _.filter(users,function(user){
+        return user.age>30
+    }),
+    _.reject(users,u=>u.age>30),
+);
+console.log(_.compact([1,'',0,123,'false',false,true,'true','0','1',{},[],null,undefined,Infinity]));
 
 </script>
     
