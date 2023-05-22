@@ -108,7 +108,7 @@ each = function(list,iter){
 let get = function(obj,key){
     return obj === null ? undefined : obj[key];
 }
-/*컬렉션 중심 프로그래밍*/
+/*@@@@컬렉션 중심 프로그래밍@@@@*/
 /*Map 특화 함수들*/
 map = function(list, mapper){
     const newList = [];
@@ -165,6 +165,16 @@ let compact = function(list, data){
 /*컴팩트 함수는 커리가 적용된 함수라면 이렇게 구현도 된다.*/
 compact = curryr(filter)(identity);
 
+
+/*찾기*/
+let find = function(list,predi){
+    const k = keys(list);
+    for(let i=0;i<k.length;i++){
+        if(predi(list[k[i]])) return list[k[i]];
+    }
+}
+
+
     return {
         each : each,
         filter : curryr(filter),
@@ -174,6 +184,7 @@ compact = curryr(filter)(identity);
         values : values,
         get : curryr(get),
         pluck : curryr(pluck),
+        find : curryr(find),
         rest : rest,
         reduce : reduce,
         curry : curry,
@@ -222,6 +233,11 @@ console.log(
     _.reject(users,u=>u.age>30),
 );
 console.log(_.compact([1,'',0,123,'false',false,true,'true','0','1',{},[],null,undefined,Infinity]));
+console.clear();
+console.log(
+    _.find([1,2,3,4,5], n => n === 5)
+)
+
 
 </script>
     
