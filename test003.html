@@ -76,13 +76,30 @@ let reduce = function(list,fn,memo){
     });
     return memo;
 }
+let push = function(obj,key,val){
+    (obj[key] = obj[key] || []).push(val);
+    return obj;
+}
+/*그룹 만들기*/
 let group_by = function(list,fn){
     return reduce(list,function(group, val){
         (group[fn(val)] = group[fn(val)] || []).push(val);
         return group;
     },{});
 }
-
+/*보조함수로 개선*/
+group_by = function(list,fn){
+    return reduce(list,function(group, val){
+        return push(group,fn(val),val);
+    },{});
+}
+/*갯수 세기*/
+let count_by = function(list, fn){
+    return reduce(list,function(count,val){
+        count[fn(val)] ?count[fn(val)]++ : count[fn(val)] = 1; 
+        return count;
+    },{});
+}
 
 /*리듀스 특화 함수, 함수 배열을 입력받아, 데이터 뭉치에 함수들을 적용한다.*/
 let pipe = function(){
@@ -219,6 +236,7 @@ let every = function(list, predi){
         //접기 특화함수
         reduce : reduce,
         group_by : group_by,
+        count_by : count_by,
         pipe : pipe,
         go : go,
     };
@@ -276,7 +294,8 @@ console.log(
     _.every(users, user=>user.age>10),
 )
 console.log(
-    _.group_by(users,user=>user.age-user.age%10)
+    _.group_by(users,user=>user.age-user.age%10),
+    _.count_by(users,user=>user.age-user.age%10)
 )
 
 </script>
