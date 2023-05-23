@@ -76,6 +76,14 @@ let reduce = function(list,fn,memo){
     });
     return memo;
 }
+let group_by = function(list,fn){
+    return reduce(list,function(group, val){
+        (group[fn(val)] = group[fn(val)] || []).push(val);
+        return group;
+    },{});
+}
+
+
 /*리듀스 특화 함수, 함수 배열을 입력받아, 데이터 뭉치에 함수들을 적용한다.*/
 let pipe = function(){
     const fns = arguments;
@@ -165,30 +173,52 @@ let compact = function(list, data){
 /*컴팩트 함수는 커리가 적용된 함수라면 이렇게 구현도 된다.*/
 compact = curryr(filter)(identity);
 
-
-/*찾기*/
+/*찾기 특화 함수들*/
 let find = function(list,predi){
     const k = keys(list);
     for(let i=0;i<k.length;i++){
-        if(predi(list[k[i]])) return list[k[i]];
+        const val = list[k[i]];
+        if(predi(val)) return val;
     }
+}
+/*인덱스 값 리턴*/
+let find_index = function (list ,predi){
+    const k = keys(list);
+    for(let i=0;i<k.length;i++){
+        if(predi(list[k[i]] )) return i;
+    }
+    return -1;
+}
+/*부분 일치 함수*/
+let some = function(list, predi){
+    return find_index(list,predi||identity) !== -1;
+}
+/*전부 일치 함수*/
+let every = function(list, predi){
+    return find_index(list,predi||identity) === -1;
 }
 
 
     return {
         each : each,
+        rest : rest,
+        //걸러내기 특화함수
         filter : curryr(filter),
         reject : curryr(reject),
         compact : compact,
+        //변환 특화함수
         map : curryr(map),
         values : values,
         get : curryr(get),
         pluck : curryr(pluck),
+        //찾기 특화함수
         find : curryr(find),
-        rest : rest,
+        find_index : curryr(find_index),
+        some : curryr(some),
+        every : curryr(every),
+        //접기 특화함수
         reduce : reduce,
-        curry : curry,
-        curryr : curryr,
+        group_by : group_by,
         pipe : pipe,
         go : go,
     };
@@ -235,9 +265,19 @@ console.log(
 console.log(_.compact([1,'',0,123,'false',false,true,'true','0','1',{},[],null,undefined,Infinity]));
 console.clear();
 console.log(
-    _.find([1,2,3,4,5], n => n === 5)
+    _.find([1,2,3,4,5], n => n === 5),
+    _.find(users,user=>user.age > 30),
+    _.find_index(users,user=>user.age > 30),
 )
-
+console.log(
+    _.some(users, user=>user.age>50),
+    _.some(users, user=>user.age>10),
+    _.every(users, user=>user.age>50),
+    _.every(users, user=>user.age>10),
+)
+console.log(
+    _.group_by(users,user=>user.age-user.age%10)
+)
 
 </script>
     
