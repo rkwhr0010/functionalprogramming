@@ -120,17 +120,18 @@ function each(list, iter){
 }
 /* 커링 함수 오직 함수만을 인자로 받아 함수를 리턴함, 평가 시점을 조율*/
 function curry(fn){
-    return function(a){
-        return function (b){
+    return function(a,b){
+        return arguments.length === 2 ? fn(a,b) : function (b){
             return fn(a,b);
         }
     }
 }
 /* 단순히 인자 순서만 변경, 화살표 함수로만 표현 */
 function curryr(fn){
-    return a => b => fn(b,a);
+    return function(a,b){
+        return arguments.length === 2 ? fn(a,b) : b => fn(b,a)
+    };
 }
-
 })();
 
 //나이 25세 이상 사용자 걸러내기
@@ -166,10 +167,10 @@ console.clear();
 //중복이름으로 구분자 _
 const _add = _.curryr((a,b)=>a+b);
 const _add10 = _add(10);
-console.log(_.curry);
 console.log(_add);
 console.log(_add10);
 console.log(_add10(20));
+console.log(_add(10,20));
 
 
 </script>
