@@ -73,6 +73,48 @@ class Hello{
 }
 hello("홍길동");
 new Hello().hello("홍길동");
+</script>
+
+
+
+<script>
+var users = [
+  { id: 10, name: 'ID', age: 36 },
+  { id: 20, name: 'BJ', age: 32 },
+  { id: 30, name: 'JM', age: 32 },
+  { id: 40, name: 'PJ', age: 27 },
+  { id: 50, name: 'HA', age: 25 },
+  { id: 60, name: 'JE', age: 26 },
+  { id: 70, name: 'JI', age: 31 },
+  { id: 80, name: 'MP', age: 23 }
+];
+const _ = (()=>{
+    return {
+        filter:filter ,
+    };
+
+/* 요소를 걸러내는 함수, predi라는 보조함수를 인자로 받는다. */
+function filter(list, predi){
+    //함수형 스타일은 기존 요소를 손상시키지 않고 항상 새로운 값을 리턴한다.
+    const result = [];
+    for(const val of list){
+        if(predi(val)) result.push(val);
+    }
+    return result;
+}
+
+})();
+//나이 25세 이상 사용자 걸러내기
+//절차지향 코드
+const tmp = [];
+for(const user of users){
+    if(user.age>=25) tmp.push(user);
+}
+console.log(tmp);
+//함수형 코드
+console.log(
+    _.filter(users, u=>u.age>=25)
+);
 
 
 </script>
