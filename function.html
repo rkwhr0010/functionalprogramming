@@ -92,26 +92,30 @@ const _ = (()=>{
     return {
         filter:filter ,
         map:map ,
+        each: each,
     };
 
 /* 요소를 걸러내는 함수, predi라는 보조함수를 인자로 받는다. */
 function filter(list, predi){
     //함수형 스타일은 기존 요소를 손상시키지 않고 항상 새로운 값을 리턴한다.
     const result = [];
-    for(const val of list){
-        //보조함수를 인자로 받아 
+    //보조함수를 인자로 받아 
+    each(list, val =>{
         if(predi(val)) result.push(val);
-    }
+    });
     return result;
 }
 /* 요소를 변환시키는 함수*/
 function map(list , mapper){
     const result = [];
-    for(val of list)
-        result.push(mapper(val));
+    each(list, val => result.push(mapper(val)));
     return result;
 }
 
+function each(list, iter){
+    for(const val of list) iter(val);
+    return list;
+}
 })();
 
 //나이 25세 이상 사용자 걸러내기
@@ -130,14 +134,14 @@ console.log(
     _.filter(users, u=>u.age-(u.age%10) === 20), //20대만
     _.filter(users, u=>u.name.startsWith("J")) //J로 시작하는 user
 );
-console.clear();
 
 //map 사용
 console.log(
     _.map(users, u=>u.age) ,
     _.map(users, u=>u.name) ,
     _.map(users, u=>u.id) ,
-)
+);
+_.each(users,u=>console.log(u));
 
 
 
