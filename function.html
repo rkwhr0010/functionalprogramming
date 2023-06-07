@@ -131,8 +131,10 @@ function curry(fn){
 }
 /* 단순히 인자 순서만 변경, 화살표 함수로만 표현 */
 function curryr(fn){
-    return function(a,b){
-        return arguments.length === 2 ? fn(a,b) : b => fn(b,a)
+    return function(a,b,c){
+        if(arguments.length === 2) return fn(a,b);
+        else if (arguments.length === 3) return fn(a,b,c);
+        else return b => fn(b,a);
     };
 }
 
@@ -223,7 +225,7 @@ console.log(userName(users));
 console.log(userName(upperAge30(users)));
 
 console.clear();
-
+/*이전 reduce 실습 내용*/
 console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,0));
 console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,10));
 console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,-10));
