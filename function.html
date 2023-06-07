@@ -90,11 +90,13 @@ const users = [
 //함수를 담은 obj
 const _ = (()=>{
     return {
-        filter:filter ,
-        map:map ,
+        filter:curryr(filter) ,
+        map:curryr(map) ,
         each: each,
         curry:curry,
         curryr:curryr,
+        reduce: reduce,
+        rest: rest,
     };
 
 /* 요소를 걸러내는 함수, predi라는 보조함수를 인자로 받는다. */
@@ -132,6 +134,27 @@ function curryr(fn){
         return arguments.length === 2 ? fn(a,b) : b => fn(b,a)
     };
 }
+
+/*요소를 하나로 접어가는 함수
+list 요소, iter 보조함수, memo 초기값*/
+function reduce(list, iter, memo){
+    if(arguments.length===2){
+        memo = list[0];
+        list = rest(list);
+    }
+    each(list, val =>{
+        //memo에 계속 누적하여 적용한다.
+        memo = iter(memo, val);
+    });
+    return memo;
+}
+/* 배열 첫 번째 요소를 잘라 나머지 배열을 리턴*/
+function rest(list, num){
+    return Array.prototype.slice.call(list,num||1);
+}
+
+
+
 })();
 
 //나이 25세 이상 사용자 걸러내기
@@ -175,6 +198,30 @@ console.log(_add(10,20));
 const _sub = _.curryr((a,b)=>a-b);
 const _sub10 = _sub(10);
 console.log( _sub10(20) );
+
+console.clear();
+
+console.log(_.filter);
+console.log(_.map);
+
+const upperAge30 = _.filter(u=>u.age>=30);
+const userName = _.map(u=>u.name);
+console.log(upperAge30);
+console.log(userName);
+
+console.log(upperAge30(users));
+console.log(userName(users));
+console.log(userName(upperAge30(users)));
+
+console.clear();
+
+console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,0));
+console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,10));
+console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,-10));
+
+console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val ));
+//30세 이상 사용자 age 합
+console.log(_.reduce(_.map(upperAge30(users),u=>u.age),(sum,val)=>sum+val ));
 
 
 
