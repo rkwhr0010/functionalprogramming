@@ -95,8 +95,9 @@ const _ = (()=>{
         each: each,
         curry:curry,
         curryr:curryr,
-        reduce: reduce,
+        reduce: curryr(reduce),
         rest: rest,
+        pipe: pipe,
     };
 
 /* 요소를 걸러내는 함수, predi라는 보조함수를 인자로 받는다. */
@@ -152,7 +153,15 @@ function reduce(list, iter, memo){
 function rest(list, num){
     return Array.prototype.slice.call(list,num||1);
 }
-
+/*리듀스 특화 함수, 함수만을 인자로 받는 함수*/
+function pipe(){
+    const fns = arguments;
+    return function(val){
+        return reduce(fns,function(val,fn){
+            return fn(val);
+        }, val );
+    };
+}
 
 
 })();
@@ -220,9 +229,16 @@ console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,10));
 console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val,-10));
 
 console.log(_.reduce([1,2,3,4,5],(sum,val)=>sum+val ));
+
 //30세 이상 사용자 age 합
 console.log(_.reduce(_.map(upperAge30(users),u=>u.age),(sum,val)=>sum+val ));
-
+//30세 이상 사용자 age 합, pipe 사용
+_.pipe(
+    _.filter(u=>u.age>=30),
+    _.map(u=>u.age),
+    _.reduce((sum,val)=>sum+val),
+    console.log
+)(users);
 
 
 </script>
