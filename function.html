@@ -119,16 +119,22 @@ function map(list , mapper){
 }
 /* 요소 리스트 값을 하나씩 꺼내어 준다.*/
 function each(list, iter){
-
     for(let i=0;i<get(list,"length");i++){
         iter(list[i]);
     } 
     return list;
 }
-
 /*안전하게 값 가져오기*/
 function get (obj,key){
     return obj === null ? undefined : obj[key];
+}
+/* 객체의 keys를 안전하게 리턴하는 함수*/
+function keys(obj){
+    return is_object(obj) ? Object.keys(obj) : [];
+}
+/* 객체인지 안전하게 확인하는 함수 */
+function is_object(obj){
+    return typeof obj === "object" && !!obj;
 }
 
 
@@ -276,13 +282,20 @@ _.go(users,
     tmpReduce,
     console.log
 );
-console.clear();
 
 
 _.each([1,2,3,4], n=> console.log(n))
 _.each(null, n=> console.log(n))
 console.log( _.filter(null, n=> true));
 console.log( _.map(null, n=> n));
+
+console.clear();
+
+_.each({a:1,b:2,c:3}, a=>console.log(a))
+//기대하는 동작 => 1 , 2,  3 출력
+
+
+
 
 </script>
 
