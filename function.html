@@ -119,9 +119,19 @@ function map(list , mapper){
 }
 /* 요소 리스트 값을 하나씩 꺼내어 준다.*/
 function each(list, iter){
-    for(const val of list) iter(val);
+
+    for(let i=0;i<get(list,"length");i++){
+        iter(list[i]);
+    } 
     return list;
 }
+
+/*안전하게 값 가져오기*/
+function get (obj,key){
+    return obj === null ? undefined : obj[key];
+}
+
+
 /* 커링 함수 오직 함수만을 인자로 받아 함수를 리턴함, 평가 시점을 조율*/
 function curry(fn){
     return function(a,b){
@@ -266,7 +276,13 @@ _.go(users,
     tmpReduce,
     console.log
 );
+console.clear();
 
+
+_.each([1,2,3,4], n=> console.log(n))
+_.each(null, n=> console.log(n))
+console.log( _.filter(null, n=> true));
+console.log( _.map(null, n=> n));
 
 </script>
 
