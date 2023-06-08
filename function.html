@@ -119,8 +119,10 @@ function map(list , mapper){
 }
 /* 요소 리스트 값을 하나씩 꺼내어 준다.*/
 function each(list, iter){
-    for(let i=0;i<get(list,"length");i++){
-        iter(list[i]);
+    const _keys = keys(list);
+
+    for(let i=0;i<_keys.length;i++){
+        iter(list[_keys[i]]);
     } 
     return list;
 }
