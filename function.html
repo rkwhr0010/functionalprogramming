@@ -120,7 +120,6 @@ function map(list , mapper){
 /* 요소 리스트 값을 하나씩 꺼내어 준다.*/
 function each(list, iter){
     const _keys = keys(list);
-
     for(let i=0;i<_keys.length;i++){
         iter(list[_keys[i]]);
     } 
@@ -293,8 +292,41 @@ console.log( _.map(null, n=> n));
 
 console.clear();
 
-_.each({a:1,b:2,c:3}, a=>console.log(a))
-//기대하는 동작 => 1 , 2,  3 출력
+_.each({a:1,b:2,c:3}, a=>console.log(a));
+_.each([1,2,3], a=>console.log(a));
+
+//Object.keys 동작방식
+// console.log(Ojbect.keys(["a","b","c"]).join("-")  );
+// console.log(Ojbect.keys("가나다라").join("-")   );
+
+
+//단일 접근 원칙
+class Data{
+    constructor(name, age){
+        this._name = name;
+        this._age =age;
+    }
+    get name(){
+        console.log("name 게터 호출");
+        return this._name;
+    }
+    get age(){
+        console.log("age 게터 호출");
+        return this._age;
+    }
+    set name(arg){
+        console.log("name 세터 호출");
+        this._name = arg;
+    }
+    set age(arg){
+        console.log("age 세터 호출");
+        this._age = arg;
+    }
+}
+const data1 = new Data("홍길동", 50);
+console.log(data1.name); //변수처럼 다룬다
+data1.name = "임꺽정"
+console.log(data1.name); //변수처럼 다룬다
 
 
 
