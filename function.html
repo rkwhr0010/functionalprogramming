@@ -93,6 +93,7 @@ const _ = (()=>{
         filter:curryr(filter) ,
         map:curryr(map) ,
         values:values,
+        pluck:pluck,
         identity:identity,
         each: each,
         curry:curry,
@@ -128,6 +129,13 @@ function values(list){
 function identity(arg){
     return arg;
 }
+
+/*요소에서 특정 값만 추출하는 함수 */
+function pluck(list, key){
+    return map(list, obj => obj[key]);
+}
+
+
 
 /* 요소 리스트 값을 하나씩 꺼내어 준다.*/
 function each(list, iter){
@@ -204,6 +212,12 @@ function go(data){
 }
 
 })();
+
+
+
+
+
+
 
 //나이 25세 이상 사용자 걸러내기
 //절차지향 코드
@@ -374,6 +388,11 @@ console.log(
 const testArr = [undefined, Infinity, null, NaN, 0, 1, 'true','false',true,false];
 console.log(
     _.filter(_.identity)(testArr)
+);
+
+console.log(
+    _.pluck(users, "age"),
+    _.pluck(users, "name"),
 )
 
 
