@@ -92,6 +92,7 @@ const _ = (()=>{
     return {
         filter:curryr(filter) ,
         reject:curryr(reject) ,
+        negate:negate ,
         map:curryr(map) ,
         values:values,
         pluck:pluck,
@@ -119,9 +120,13 @@ function filter(list, predi){
 /*단순히 filter에 반대로 행동하는 함수
 (== 주어진 조건에 해당하는 값을 반환하는 함수*/
 function reject(list, predi){
-    return filter(list, val => !predi(val) );
+    return filter(list, negate(predi) );
 }
 
+/*결과를 반대로 바꾸는 함수*/
+function negate(predi){
+    return val => !predi(val);
+}
 
 
 /* 수집하기 대표 요소를 변환시키는 함수*/
@@ -395,10 +400,6 @@ console.log(
     _.values(users),
     _.values(users[0]),
 );
-const testArr = [undefined, Infinity, null, NaN, 0, 1, 'true','false',true,false];
-console.log(
-    _.filter(_.identity)(testArr)
-);
 
 console.log(
     _.pluck(users, "age"),
@@ -418,6 +419,11 @@ console.log(
     _.filter(users, user=>user.age>30),
     _.reject(users, user=>user.age>30),
 )
+const testArr = [undefined, Infinity, null, NaN, 0, 1, 'true','false',true,false];
+console.log(
+    _.filter(_.identity)(testArr),
+    _.filter(_.negate(_.identity))(testArr)
+);
 
 
 </script>
