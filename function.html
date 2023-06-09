@@ -91,6 +91,7 @@ const users = [
 const _ = (()=>{
     return {
         filter:curryr(filter) ,
+        reject:curryr(reject) ,
         map:curryr(map) ,
         values:values,
         pluck:pluck,
@@ -114,6 +115,15 @@ function filter(list, predi){
     });
     return result;
 }
+
+/*단순히 filter에 반대로 행동하는 함수
+(== 주어진 조건에 해당하는 값을 반환하는 함수*/
+function reject(list, predi){
+    return filter(list, val => !predi(val) );
+}
+
+
+
 /* 수집하기 대표 요소를 변환시키는 함수*/
 function map(list , mapper){
     const result = [];
@@ -393,6 +403,20 @@ console.log(
 console.log(
     _.pluck(users, "age"),
     _.pluck(users, "name"),
+);
+
+console.clear();
+
+
+const filterEx = user=>user.age>30;
+
+function ex(user){
+    return filterEx;
+}
+
+console.log(
+    _.filter(users, user=>user.age>30),
+    _.reject(users, user=>user.age>30),
 )
 
 
