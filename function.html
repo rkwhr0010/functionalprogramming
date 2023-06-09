@@ -92,6 +92,8 @@ const _ = (()=>{
     return {
         filter:curryr(filter) ,
         map:curryr(map) ,
+        values:values,
+        identity:identity,
         each: each,
         curry:curry,
         curryr:curryr,
@@ -111,12 +113,22 @@ function filter(list, predi){
     });
     return result;
 }
-/* 요소를 변환시키는 함수*/
+/* 수집하기 대표 요소를 변환시키는 함수*/
 function map(list , mapper){
     const result = [];
     each(list, val => result.push(mapper(val)));
     return result;
 }
+
+/*요소 값을 반환하는 함수*/
+function values(list){
+    return map(list,identity);
+}
+/*자기자신을 그대로 반환하는 함수*/
+function identity(arg){
+    return arg;
+}
+
 /* 요소 리스트 값을 하나씩 꺼내어 준다.*/
 function each(list, iter){
     const _keys = keys(list);
@@ -298,10 +310,30 @@ _.each([1,2,3], a=>console.log(a));
 //Object.keys 동작방식
 console.log(Object.keys(["a","b","c"]).join("-")  );
 console.log(Object.keys("가나다라").join("-")   );
+console.log(Object.keys({고:"바",구:"바",마:"나"}).join("-")   );
 //Object.values 동일
-console.log(Object.keys(["a","b","c"]).join("-")  );
-console.log(Object.keys("가나다라").join("-")   );
+console.log(Object.values(["a","b","c"]).join("-")  );
+console.log(Object.values("가나다라").join("-")   );
+console.log(Object.values({고:"바",구:"바",마:"나"}).join("-")   );
 
+//Object.keys 는 for...in 과 유사
+function forIn(list){
+    const result = [];
+    for(const arg in list) result.push(arg);
+    return result.join("-");
+}
+//Object.values 는 for...of 과 유사
+function forOf(list){
+    const result = [];
+    for(const arg of list) result.push(arg);
+    return result.join("-");
+}
+console.log(forIn(["a","b","c"]) );
+console.log(forIn("가나다라") );
+console.log(forIn({고:"바",구:"바",마:"나"}));
+console.log(forOf(["a","b","c"]) );
+console.log(forOf("가나다라") );
+// console.log(forOf({고:"바",구:"바",마:"나"}));//불가능
 
 
 //단일 접근 원칙
@@ -327,12 +359,22 @@ class Data{
         this._age = arg;
     }
 }
+console.clear();
 const data1 = new Data("홍길동", 50);
 console.log(data1.name); //변수처럼 다룬다
 data1.name = "임꺽정"
 console.log(data1.name); //변수처럼 다룬다
 
+console.clear();
 
+console.log(
+    _.values(users),
+    _.values(users[0]),
+);
+const testArr = [undefined, Infinity, null, NaN, 0, 1, 'true','false',true,false];
+console.log(
+    _.filter(_.identity)(testArr)
+)
 
 
 </script>
