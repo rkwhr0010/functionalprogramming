@@ -93,6 +93,7 @@ const _ = (()=>{
         filter:curryr(filter) ,
         reject:curryr(reject) ,
         negate:negate ,
+        compact:compact ,
         map:curryr(map) ,
         values:values,
         pluck:pluck,
@@ -126,6 +127,11 @@ function reject(list, predi){
 /*결과를 반대로 바꾸는 함수*/
 function negate(predi){
     return val => !predi(val);
+}
+
+/*참으로 판단되는 값을 걸러내는 함수*/
+function compact(list){
+    return filter(list, identity);
 }
 
 
@@ -421,9 +427,27 @@ console.log(
 )
 const testArr = [undefined, Infinity, null, NaN, 0, 1, 'true','false',true,false];
 console.log(
-    _.filter(_.identity)(testArr),
-    _.filter(_.negate(_.identity))(testArr)
+    _.filter(_.identity)(testArr), 
+    _.filter(_.negate(_.identity))(testArr),
 );
+const compactEx = _.filter(_.identity);
+console.log(
+    compactEx(testArr),//이것과 완전히 같다.
+    _.compact(testArr)
+)
+/*
+compactEx
+b => fn(b,a)   b는 _.filter  , a는 _.identity  , b로 testArr
+_.compact
+function compact(list){
+    return filter(list, identity);
+}
+화살표 함수로 바꾸면
+list => filter(list, identity)
+기호만 바꾸면
+b => fn(b,a)
+*/
+
 
 
 </script>
