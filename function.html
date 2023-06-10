@@ -129,18 +129,25 @@ function find_index(list, predi){
     }
     return -1; //자바스크립트 표준에 맞춤
 }
-/* find_index 특화 함수 해당 조건이 존재하는지 검사한다. */
+/* find_index 특화 함수 주어진 조건에 값이 하나라도 존재하는지 검사한다.*/
 function some(list, predi){
     //하나라도 해당하면 -1을 리턴할 수 없다.
-    return find_index(list, predi) !== -1;
+    return find_index(list, predi||identity) !== -1;
 }
-
+/* find_index 특화 함수 주어진 조건에 값이 전부 일치하는지 검사한다.*/
 function every(list, predi){
     //주어진 조건 반대에 해당하는 값을 못찾으면, 전부 해당하는 것
-    return find_index(list, negate(predi)) === -1;
+    return find_index(list, negate(predi||identity)) === -1;
 }
 
-
+function every2(list, predi){
+    return find_index(list, function(val){
+        return !predi(val);
+    })
+}
+function every3(list, predi){
+    return find_index(list, (val)=> !predi(val) )
+}
 
 /* 요소를 걸러내는 함수, predi라는 보조함수를 인자로 받는다. */
 function filter(list, predi){
@@ -499,6 +506,12 @@ console.log(
     _.some(users, user=>user.age>30),
     _.every(users, user=>user.age>30),
     _.every(users, user=>user.age>10),
+)
+console.log(
+    _.some(users),
+    _.every(users),
+    _.some(testArr),
+    _.every(testArr),
 )
 
 
