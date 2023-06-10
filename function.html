@@ -113,6 +113,7 @@ const _ = (()=>{
         min_by: curryr(min_by),
         max_by: curryr(max_by),
         group_by: curryr(group_by),
+        count_by: curryr(count_by),
         rest: rest,
         pipe: pipe,
         go: go,
@@ -284,6 +285,13 @@ function group_by(list,iter){
         //그룹화하려면 그룹 기준과 그룹화될 리스트 공간이 필요하다.
         //그룹 기준에 충족하는 첫 그룹화라면 빈 배열을 넣어준다.
         (group[iter(val)] = group[iter(val)] || [] ).push(val);
+        return group;
+    } ,{});
+}
+/*주어진 조건으로 그룹핑한 결과를 개수로 반환하는 함수*/
+function count_by(list,iter){
+    return reduce(list, (group, val) => {
+        group[iter(val)] = group[iter(val)]+1 || 1;
         return group;
     } ,{});
 }
@@ -577,6 +585,18 @@ _.go(
     _.group_by(user=>user.age%2),
     console.log
 );
+_.go(
+    users,
+    _.count_by(user=>user.age-(user.age%10)),
+    console.log
+);
+console.log(_.count_by(users,u=>u.age-(u.age%10)));
+_.go(
+    users,
+    _.count_by(user=>user.age%2),
+    console.log
+);
+
 
 
 
