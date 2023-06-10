@@ -196,6 +196,7 @@ function map(list , mapper){
     each(list, (val,key) => result.push(mapper(val,key)));
     return result;
 }
+/*key:value 쌍으로하는 배열을 반환하는 함수*/
 function pairs (list){
     return map(list, (val, key)=>[key,val]);
 }
@@ -599,6 +600,11 @@ console.log(
     _.pairs(users[0]),
 )
 
+_.go(
+    users,
+    _.map(u=>_.pairs(u)),
+    console.log
+)
 
 
 </script>
