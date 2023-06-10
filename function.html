@@ -112,6 +112,7 @@ const _ = (()=>{
         max: max,
         min_by: curryr(min_by),
         max_by: curryr(max_by),
+        group_by: curryr(group_by),
         rest: rest,
         pipe: pipe,
         go: go,
@@ -277,7 +278,15 @@ function max_by(list,iter){
     return reduce(list, (a, b)=> iter(a) < iter(b) ? b : a);
 }
 
-
+/*주어진 조건으로 그룹핑한 결과를 반환하는 함수*/
+function group_by(list,iter){
+    return reduce(list, (group, val) => {
+        //그룹화하려면 그룹 기준과 그룹화될 리스트 공간이 필요하다.
+        //그룹 기준에 충족하는 첫 그룹화라면 빈 배열을 넣어준다.
+        (group[iter(val)] = group[iter(val)] || [] ).push(val);
+        return group;
+    } ,{});
+}
 
 
 /* 배열 첫 번째 요소를 잘라 나머지 배열을 리턴*/
@@ -554,6 +563,21 @@ console.log(_.min(numArr));
 console.log(_.max(numArr));
 console.log(_.min_by(users, user=>user.age));
 console.log(_.max_by(users, _.get("age")));
+
+console.clear();
+
+_.go(
+    users,
+    _.group_by(user=>user.age-(user.age%10)),
+    console.log
+);
+console.log(_.group_by(users,u=>u.age-(u.age%10)));
+_.go(
+    users,
+    _.group_by(user=>user.age%2),
+    console.log
+);
+
 
 
 </script>
