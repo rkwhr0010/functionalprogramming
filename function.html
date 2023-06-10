@@ -98,6 +98,7 @@ const _ = (()=>{
         find_index : find_index,
         some : some,
         every : every,
+        contains : contains,
         map:curryr(map) ,
         values:values,
         pluck:pluck,
@@ -147,6 +148,10 @@ function every2(list, predi){
 }
 function every3(list, predi){
     return find_index(list, (val)=> !predi(val) )
+}
+/*주어진 값이 존재하는지 검사하는 함수*/
+function contains(list, data){
+    return find_index(list, val => val === data) !== -1;
 }
 
 /* 요소를 걸러내는 함수, predi라는 보조함수를 인자로 받는다. */
@@ -506,14 +511,19 @@ console.log(
     _.some(users, user=>user.age>30),
     _.every(users, user=>user.age>30),
     _.every(users, user=>user.age>10),
-)
+);
 console.log(
     _.some(users),
     _.every(users),
     _.some(testArr),
     _.every(testArr),
-)
+);
 
+console.log(
+    _.contains(users, users[2] ),
+    _.contains(users[2], "JM" ),
+    _.contains(users[2], "홍길동" ),
+)
 
 
 </script>
