@@ -94,6 +94,8 @@ const _ = (()=>{
         reject:curryr(reject) ,
         negate:negate ,
         compact:compact ,
+        find : find,
+        find_index : find_index,
         map:curryr(map) ,
         values:values,
         pluck:pluck,
@@ -106,6 +108,25 @@ const _ = (()=>{
         pipe: pipe,
         go: go,
     };
+
+/*찾아내기 대표 함수 find
+filter와 유사하나 predi에 걸러진 처음으로 만나는 요소를 반환한다.*/
+function find(list, predi){
+    const _keys = keys(list);
+    for(let i=0;i<_keys.length;i++){
+        const val = list[_keys[i]];
+        if(predi(val)) return val;
+    }
+    return undefined; //생략 가능, 자동으로 undefined 리턴될 것
+}
+/*predi에 걸러진 처음으로 만나는 요소의 인덱스를 리턴한다.*/
+function find_index(list, predi){
+    const _keys = keys(list);
+    for(let i=0;i<_keys.length;i++){
+        if(predi(list[_keys[i]])) return i;
+    }
+    return -1; //자바스크립트 표준에 맞춤
+}
 
 /* 요소를 걸러내는 함수, predi라는 보조함수를 인자로 받는다. */
 function filter(list, predi){
@@ -447,6 +468,17 @@ list => filter(list, identity)
 기호만 바꾸면
 b => fn(b,a)
 */
+
+console.clear();
+
+console.log(
+    _.find(users, user => user.age >= 30),
+    _.filter(users, user => user.age >= 30),
+);
+console.log(
+    _.find_index(users, user => user.age <= 25),
+    _.find_index(users, user => user.age > 40),
+);
 
 
 
