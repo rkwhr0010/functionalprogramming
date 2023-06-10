@@ -100,6 +100,7 @@ const _ = (()=>{
         every : every,
         contains : contains,
         map:curryr(map) ,
+        get:curryr(get) ,
         values:values,
         pluck:pluck,
         identity:identity,
@@ -107,6 +108,10 @@ const _ = (()=>{
         curry:curry,
         curryr:curryr,
         reduce: curryr(reduce),
+        min: min,
+        max: max,
+        min_by: curryr(min_by),
+        max_by: curryr(max_by),
         rest: rest,
         pipe: pipe,
         go: go,
@@ -257,6 +262,24 @@ function reduce(list, iter, memo){
     });
     return memo;
 }
+
+function min(list){
+    return reduce(list, (a, b)=> a > b ? b : a);
+}
+function max(list){
+    return reduce(list, (a, b)=> a < b ? b : a);
+}
+/*보조 함수를 인자로 받아, 그 반환값을 기준으로 평가한다.*/
+function min_by(list,iter){
+    return reduce(list, (a, b)=> iter(a) > iter(b) ? b : a);
+}
+function max_by(list,iter){
+    return reduce(list, (a, b)=> iter(a) < iter(b) ? b : a);
+}
+
+
+
+
 /* 배열 첫 번째 요소를 잘라 나머지 배열을 리턴*/
 function rest(list, num){
     return Array.prototype.slice.call(list,num||1);
@@ -523,7 +546,14 @@ console.log(
     _.contains(users, users[2] ),
     _.contains(users[2], "JM" ),
     _.contains(users[2], "홍길동" ),
-)
+);
+console.clear();
+const numArr = [-10,10,20,30,-20,-50,66];
+
+console.log(_.min(numArr));
+console.log(_.max(numArr));
+console.log(_.min_by(users, user=>user.age));
+console.log(_.max_by(users, _.get("age")));
 
 
 </script>
